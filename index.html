@@ -410,7 +410,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <button class="nav-btn" onclick="goPanel('stage',this)"><i class="ti ti-device-tv"></i>Stage display</button>
       <button class="nav-btn" onclick="goPanel('media',this)"><i class="ti ti-photo"></i>Media</button>
       <button class="nav-btn" onclick="goPanel('audio',this)"><i class="ti ti-volume"></i>Audio</button>
+      <button class="nav-btn" onclick="goPanel('capture',this)"><i class="ti ti-video"></i>Capture</button>
+      <button class="nav-btn" onclick="goPanel('announcement',this)"><i class="ti ti-speakerphone"></i>Anuncios</button>
       <div class="sb-sec">Herramientas</div>
+      <button class="nav-btn" onclick="goPanel('sysinfo',this)"><i class="ti ti-server"></i>Sistema</button>
       <button class="nav-btn" onclick="goPanel('notes',this)"><i class="ti ti-notes"></i>Notas del servicio</button>
       <button class="nav-btn" onclick="goPanel('log',this)"><i class="ti ti-terminal-2"></i>Activity log</button>
       <button class="nav-btn" onclick="goPanel('settings',this)"><i class="ti ti-settings"></i>Ajustes</button>
@@ -449,6 +452,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="tpill" id="stPill"><i class="ti ti-device-tv"></i>Stage</div>
           <div class="tpill" id="outPill"><i class="ti ti-cast"></i>Output</div>
           <div class="tpill" id="audPill"><i class="ti ti-volume"></i>Audio</div>
+          <div class="tpill" id="capPill"><i class="ti ti-video"></i>REC</div>
+          <div class="tpill" id="lookPill"><i class="ti ti-palette"></i>Look</div>
         </div>
         <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><i class="ti ti-moon"></i></button>
         <button class="icon-btn" onclick="document.getElementById('kbdModal').classList.add('show')"><i class="ti ti-keyboard"></i></button>
@@ -672,6 +677,122 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         </div>
       </div>
 
+
+      <!-- CAPTURE -->
+      <div class="panel" id="panel-capture">
+        <div class="row2">
+          <div class="card">
+            <div class="clabel"><i class="ti ti-video"></i>Estado de grabación</div>
+            <div id="captureStatusBlock" style="padding:12px 0;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                <div id="capDot" style="width:12px;height:12px;border-radius:50%;background:var(--text3);transition:.3s;flex-shrink:0;"></div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:var(--text);" id="capStatusTxt">Sin datos</div>
+                  <div style="font-size:10px;color:var(--text3);margin-top:2px;" id="capTimeTxt">—</div>
+                </div>
+              </div>
+              <div class="eu-stats">
+                <div class="eu-stat"><div class="eu-stat-lbl">Tiempo (s)</div><div class="eu-stat-val" id="capSecs">—</div></div>
+                <div class="eu-stat"><div class="eu-stat-lbl">Formato</div><div class="eu-stat-val" id="capCustom">—</div></div>
+              </div>
+            </div>
+            <div class="cue-grid" style="margin-top:12px;">
+              <button class="cue-btn green" onclick="ProAPI.captureStart()"><i class="ti ti-record-mail"></i>Iniciar REC</button>
+              <button class="cue-btn red" onclick="ProAPI.captureStop()"><i class="ti ti-player-stop"></i>Detener REC</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="clabel"><i class="ti ti-palette"></i>Look activo</div>
+            <div style="margin-bottom:8px;">
+              <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Look en uso</div>
+              <div style="font-size:15px;font-weight:700;color:var(--blue);" id="activeLookName">—</div>
+              <div style="font-size:9px;color:var(--text3);margin-top:2px;font-family:var(--mono);" id="activeLookUuid">—</div>
+            </div>
+            <div class="clabel" style="margin-top:14px;"><i class="ti ti-cast"></i>Pantallas</div>
+            <div class="eu-stats">
+              <div class="eu-stat"><div class="eu-stat-lbl">Audience screen</div><div class="eu-stat-val" id="audienceScreenBadge">—</div></div>
+              <div class="eu-stat"><div class="eu-stat-lbl">Stage screen</div><div class="eu-stat-val" id="stageScreenBadge">—</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="clabel"><i class="ti ti-music"></i>Transport — Audio layer</div>
+          <div class="eu-stats" style="margin-bottom:10px;">
+            <div class="eu-stat"><div class="eu-stat-lbl">Nombre</div><div class="eu-stat-val" style="font-size:11px;" id="audioLayerName">—</div></div>
+            <div class="eu-stat"><div class="eu-stat-lbl">Estado</div><div class="eu-stat-val" id="audioLayerPlaying">—</div></div>
+            <div class="eu-stat"><div class="eu-stat-lbl">Tiempo</div><div class="eu-stat-val" id="audioLayerTime">—</div></div>
+            <div class="eu-stat"><div class="eu-stat-lbl">Duración</div><div class="eu-stat-val" id="audioLayerDuration">—</div></div>
+          </div>
+          <div class="clabel"><i class="ti ti-clock"></i>Audio countdown timer</div>
+          <div style="font-size:28px;font-weight:700;color:var(--amber);font-family:var(--mono);margin:6px 0;" id="audioCountdownVal">—</div>
+        </div>
+      </div>
+
+      <!-- ANNOUNCEMENT -->
+      <div class="panel" id="panel-announcement">
+        <div class="row2">
+          <div class="card">
+            <div class="clabel"><i class="ti ti-speakerphone"></i>Anuncio activo</div>
+            <div style="margin-bottom:10px;">
+              <div style="font-size:9px;color:var(--text3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.1em;">Nombre</div>
+              <div style="font-size:15px;font-weight:700;color:var(--text);" id="annName">Sin anuncio activo</div>
+              <div style="font-size:9px;color:var(--text3);margin-top:4px;font-family:var(--mono);" id="annUuid">—</div>
+            </div>
+            <div class="eu-stats">
+              <div class="eu-stat"><div class="eu-stat-lbl">Slide index</div><div class="eu-stat-val" id="annSlideIdx">—</div></div>
+              <div class="eu-stat"><div class="eu-stat-lbl">Playlist</div><div class="eu-stat-val" style="font-size:10px;" id="annPlaylistName">—</div></div>
+              <div class="eu-stat"><div class="eu-stat-lbl">Item en playlist</div><div class="eu-stat-val" id="annPlaylistItemIdx">—</div></div>
+              <div class="eu-stat"><div class="eu-stat-lbl">Item nombre</div><div class="eu-stat-val" style="font-size:10px;" id="annPlaylistItemName">—</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="clabel"><i class="ti ti-player-play"></i>Transport — Anuncio</div>
+            <div class="eu-stats" style="margin-bottom:10px;">
+              <div class="eu-stat"><div class="eu-stat-lbl">Media</div><div class="eu-stat-val" style="font-size:10px;" id="annTransportName">—</div></div>
+              <div class="eu-stat"><div class="eu-stat-lbl">Reproduciendo</div><div class="eu-stat-val" id="annTransportPlaying">—</div></div>
+              <div class="eu-stat"><div class="eu-stat-lbl">Duración</div><div class="eu-stat-val" id="annTransportDuration">—</div></div>
+            </div>
+            <div class="nav-row">
+              <button class="nbig" style="font-size:11px;padding:10px;" onclick="ProAPI.announcement()"><i class="ti ti-player-play"></i>Play anuncio</button>
+              <button class="nbig" style="font-size:11px;padding:10px;" onclick="ProAPI.clearMedia()"><i class="ti ti-x"></i>Clear</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="clabel"><i class="ti ti-list"></i>Presentación activa — Info completa</div>
+          <div class="eu-stats">
+            <div class="eu-stat"><div class="eu-stat-lbl">Nombre</div><div class="eu-stat-val" style="font-size:10px;" id="fullPresName">—</div></div>
+            <div class="eu-stat"><div class="eu-stat-lbl">Slides</div><div class="eu-stat-val" id="fullPresCount">—</div></div>
+            <div class="eu-stat"><div class="eu-stat-lbl">Restantes</div><div class="eu-stat-val" id="fullPresRemain">—</div></div>
+            <div class="eu-stat"><div class="eu-stat-lbl">Index</div><div class="eu-stat-val" id="fullPresIdx">—</div></div>
+            <div class="eu-stat"><div class="eu-stat-lbl">Playlist</div><div class="eu-stat-val" style="font-size:10px;" id="fullPresPlaylist">—</div></div>
+            <div class="eu-stat"><div class="eu-stat-lbl">Focused pres.</div><div class="eu-stat-val" style="font-size:10px;" id="focusedPresName">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SYSINFO -->
+      <div class="panel" id="panel-sysinfo">
+        <div class="row2">
+          <div class="card">
+            <div class="clabel"><i class="ti ti-server"></i>Información del servidor</div>
+            <div class="eu-stats">
+              <div class="eu-stat"><div class="eu-stat-lbl">Nombre</div><div class="eu-stat-val" style="font-size:11px;" id="sysName">—</div></div>
+              <div class="eu-stat"><div class="eu-stat-lbl">Plataforma</div><div class="eu-stat-val" id="sysPlatform">—</div></div>
+              <div class="eu-stat"><div class="eu-stat-lbl">OS Version</div><div class="eu-stat-val" style="font-size:10px;" id="sysOsVersion">—</div></div>
+              <div class="eu-stat"><div class="eu-stat-lbl">Último update</div><div class="eu-stat-val" style="font-size:10px;" id="sysLastUpdate">—</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="clabel"><i class="ti ti-clock"></i>Timers — JSON completo</div>
+            <div id="timersJsonBlock" style="font-family:var(--mono);font-size:9px;color:var(--text3);max-height:200px;overflow-y:auto;white-space:pre-wrap;background:var(--bg3);padding:8px;border-radius:6px;border:0.5px solid var(--border);">Conecta para ver datos de timers.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="clabel"><i class="ti ti-list"></i>Playlist activa — Items</div>
+          <div id="activePlaylistItems" style="font-size:11px;color:var(--text3);">Sin datos de playlist.</div>
+        </div>
+      </div>
     </div><!-- /content -->
   </div><!-- /main -->
 </div><!-- /app -->
@@ -742,6 +863,12 @@ const ProAPI = (() => {
         fetchVideoCountdown().catch(() => {}),
         fetchTransportPresentation().catch(() => {}),
         fetchActivePresentation().catch(() => {}),
+        fetchCaptureStatus().catch(() => {}),
+        fetchLook().catch(() => {}),
+        fetchScreenStatus().catch(() => {}),
+        fetchTransportAudio().catch(() => {}),
+        fetchAnnouncementData().catch(() => {}),
+        fetchActivePresentationFull().catch(() => {}),
       ]);
       renderAll();
       _failCount = 0;
@@ -785,6 +912,9 @@ const ProAPI = (() => {
     try { await fetchLibrary(); } catch(_) {}
     try { await fetchMacros(); } catch(_) {}
     try { await fetchStageLayouts(); } catch(_) {}
+    try { await fetchSystemInfo(); } catch(_) {}
+    try { await fetchLook(); } catch(_) {}
+    try { await fetchScreenStatus(); } catch(_) {}
   }
 
   async function fetchActivePresentation() {
@@ -1066,6 +1196,7 @@ const ProAPI = (() => {
       addLog('Desconectado manualmente', 'warn');
     },
     fetchLibrary,
+    captureStart, captureStop,
     nextSlide, prevSlide,
     clearAll, clearText, clearMedia, black, logo, liveOutput,
     videoInput, props, announcement,
@@ -1110,7 +1241,7 @@ let activeStage = 0, activePres = 0;
 let audioVols = AUDIO_CH.map(a => a.vol), audioMutes = AUDIO_CH.map(() => false);
 let logs = [], currentPanel = 'enuso', sessionSecs = 0;
 let darkMode = true;
-const PANELS = {enuso:'En uso',live:'Control en vivo',timers:'Timers',macros:'Macros',pres:'Presentaciones',stage:'Stage display',media:'Media',audio:'Audio',notes:'Notas del servicio',log:'Activity log',settings:'Ajustes'};
+const PANELS = {enuso:'En uso',live:'Control en vivo',timers:'Timers',macros:'Macros',pres:'Presentaciones',stage:'Stage display',media:'Media',audio:'Audio',capture:'Capture',announcement:'Anuncios',sysinfo:'Información del sistema',notes:'Notas del servicio',log:'Activity log',settings:'Ajustes'};
 
 // ── UI update from API data ────────────────────────────────────────────────
 function updateSlideUI(presName, slideIdx, slideCount, curText, nextText) {
@@ -1515,7 +1646,9 @@ function renderAll(){renderTimersRow('timersLive');renderTimersRow('timersEnUso'
 const savedTheme = localStorage.getItem('media_theme');
 if (savedTheme === 'light') { darkMode=false; document.body.className='light'; document.getElementById('themeBtn').innerHTML='<i class="ti ti-sun"></i>'; }
 renderAll(); loadNotes();
-addLog('Dashboard iniciado — v2.0 con API real', 'info');
+addLog('Dashboard iniciado — v3.0 con variables extendidas', 'info');
+setInterval(() => { if(ProAPI.connected) fetchSystemInfo(); }, 10000);
+// sysinfo polling handled in ProAPI.fetchSystemInfo via pollLive
 </script>
 </body>
 </html>
