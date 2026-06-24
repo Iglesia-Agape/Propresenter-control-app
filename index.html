@@ -1647,8 +1647,6 @@ const savedTheme = localStorage.getItem('media_theme');
 if (savedTheme === 'light') { darkMode=false; document.body.className='light'; document.getElementById('themeBtn').innerHTML='<i class="ti ti-sun"></i>'; }
 renderAll(); loadNotes();
 addLog('Dashboard iniciado — v3.0 con variables extendidas', 'info');
-setInterval(() => { if(ProAPI.connected) fetchSystemInfo(); }, 10000);
-// sysinfo polling handled in ProAPI.fetchSystemInfo via pollLive
 </script>
 </body>
 </html>
