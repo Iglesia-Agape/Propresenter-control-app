@@ -351,18 +351,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   </div>
   <div class="pin-error" id="pinError"></div>
   <div class="pin-pad" id="pinPad">
-    <button class="pin-btn" data-pin="1">1</button>
-    <button class="pin-btn" data-pin="2">2</button>
-    <button class="pin-btn" data-pin="3">3</button>
-    <button class="pin-btn" data-pin="4">4</button>
-    <button class="pin-btn" data-pin="5">5</button>
-    <button class="pin-btn" data-pin="6">6</button>
-    <button class="pin-btn" data-pin="7">7</button>
-    <button class="pin-btn" data-pin="8">8</button>
-    <button class="pin-btn" data-pin="9">9</button>
-    <button class="pin-btn" data-pin="del" style="color:var(--text3)">&#9003;</button>
-    <button class="pin-btn" data-pin="0">0</button>
-    <button class="pin-btn" data-pin="clear" style="color:var(--red);font-size:12px;">Borrar</button>
+    <button class="pin-btn" onclick="pinInput('1')">1</button>
+    <button class="pin-btn" onclick="pinInput('2')">2</button>
+    <button class="pin-btn" onclick="pinInput('3')">3</button>
+    <button class="pin-btn" onclick="pinInput('4')">4</button>
+    <button class="pin-btn" onclick="pinInput('5')">5</button>
+    <button class="pin-btn" onclick="pinInput('6')">6</button>
+    <button class="pin-btn" onclick="pinInput('7')">7</button>
+    <button class="pin-btn" onclick="pinInput('8')">8</button>
+    <button class="pin-btn" onclick="pinInput('9')">9</button>
+    <button class="pin-btn" onclick="pinClear(false)" style="color:var(--text3)">&#9003;</button>
+    <button class="pin-btn" onclick="pinInput('0')">0</button>
+    <button class="pin-btn" onclick="pinClear(true)" style="color:var(--red);font-size:12px;">Borrar</button>
   </div>
   <button id="pinResetBtn" style="background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;margin-top:4px;font-family:var(--font);">¿Olvidaste el PIN? Restablecer a 1234</button>
 </div>
